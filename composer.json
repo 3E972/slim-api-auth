@@ -1,10 +1,10 @@
 {
-    "name": "jeremykendall/slim-auth",
-    "description": "Authorization and authentication for the Slim Framework using ZF2 Authentication and Acl components",
-    "homepage": "https://github.com/jeremykendall/slim-auth",
+    "name": "chris911/slim-api-auth",
+    "description": "Authorization and authentication for the Slim based APIs using ZF2 Authentication and Acl components.",
+    "homepage": "https://github.com/Chris911/slim-api-auth",
     "support": {
-        "issues": "https://github.com/jeremykendall/slim-auth/issues",
-        "source": "https://github.com/jeremykendall/slim-auth"
+        "issues": "https://github.com/Chris911/slim-api-auth/issues",
+        "source": "https://github.com/Chris911/slim-api-auth"
     },
     "license": "MIT",
     "authors": [
@@ -12,15 +12,19 @@
             "name": "Jeremy Kendall",
             "homepage": "http://about.me/jeremykendall",
             "role": "Developer"
+        },
+        {
+            "name": "Christophe Naud-Dulude",
+            "homepage": "https://github.com/Chris911",
+            "role": "Developer"
         }
     ],
     "keywords": [
         "auth",
         "authorization",
         "authentication",
-        "slim",
+        "api",
         "slim framework",
-        "zend",
         "zend framework",
         "zf2"
     ],
@@ -48,7 +52,7 @@
     },
     "autoload": {
         "psr-0": {
-            "JeremyKendall\\Slim\\Auth\\": "src/"
+            "Chris911\\Slim\\Auth\\": "src/"
         }
     },
     "suggest": {
