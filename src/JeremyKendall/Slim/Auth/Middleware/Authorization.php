@@ -68,7 +68,9 @@ class Authorization extends \Slim\Middleware
         $username = $app->request->headers->get('Authorization-User');
         $password = $app->request->headers->get('Authorization-Password');
 
-        $result = $app->authenticator->authenticate($username, $password);
+        if($username != null && $password != null) {
+          $result = $app->authenticator->authenticate($username, $password);
+        }
 
         $role = $this->getRole($auth->getIdentity());
 
