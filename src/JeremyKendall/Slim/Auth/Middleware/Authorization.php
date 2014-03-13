@@ -63,6 +63,13 @@ class Authorization extends \Slim\Middleware
         $app = $this->app;
         $auth = $this->auth;
         $acl = $this->acl;
+
+        // Check if we have credentials in the header
+        $username = $app->request->headers->get('Authorization-User');
+        $password = $app->request->headers->get('Authorization-Password');
+
+        $result = $app->authenticator->authenticate($username, $password);
+
         $role = $this->getRole($auth->getIdentity());
 
         $isAuthorized = function () use ($app, $auth, $acl, $role) {
