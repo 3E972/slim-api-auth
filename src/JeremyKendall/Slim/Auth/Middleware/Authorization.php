@@ -78,12 +78,9 @@ class Authorization extends \Slim\Middleware
             $hasIdentity = $auth->hasIdentity();
             $isAllowed = $acl->isAllowed($role, $resource, $privilege);
 
-            if ($hasIdentity && !$isAllowed) {
-                throw new HttpForbiddenException();
-            }
-
-            if (!$hasIdentity && !$isAllowed) {
-                return $app->redirect($app->urlFor('login'));
+            if(!$isAllowed) {
+              $unauthorized = array("code" => 403, "error" => "Unauthorized access");
+              $app->halt(403, json_encode($unauthorized));
             }
         };
 
