@@ -52,7 +52,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Chris911\\Slim\\Auth\\": "src/"
+            "JeremyKendall\\Slim\\Auth\\": "src/"
         }
     },
     "suggest": {
