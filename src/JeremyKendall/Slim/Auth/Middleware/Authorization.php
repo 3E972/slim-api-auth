@@ -11,6 +11,7 @@
 namespace JeremyKendall\Slim\Auth\Middleware;
 
 use JeremyKendall\Slim\Auth\Exception\HttpForbiddenException;
+use JeremyKendall\Slim\Auth\IAuthHandler;
 use Zend\Authentication\AuthenticationService;
 use Zend\Permissions\Acl\Acl;
 
@@ -41,15 +42,21 @@ class Authorization extends \Slim\Middleware
     private $acl;
 
     /**
+     * @var Auth handler
+     */
+    private $handler;
+
+    /**
      * Public constructor
      *
      * @param AuthenticationService $auth Authentication service
      * @param Acl                   $acl  Zend Acl
      */
-    public function __construct(AuthenticationService $auth, Acl $acl)
+    public function __construct(AuthenticationService $auth, Acl $acl, IAuthHandler $handler)
     {
         $this->auth = $auth;
         $this->acl = $acl;
+        $this->handler = $handler;
     }
 
     /**
@@ -63,6 +70,7 @@ class Authorization extends \Slim\Middleware
         $app = $this->app;
         $auth = $this->auth;
         $acl = $this->acl;
+        $handler = $this->handler;
 
         // Check if we have credentials in the header
         $username = $app->request->headers->get('Authorization-User');
@@ -74,15 +82,16 @@ class Authorization extends \Slim\Middleware
 
         $role = $this->getRole($auth->getIdentity());
 
-        $isAuthorized = function () use ($app, $auth, $acl, $role) {
+        $isAuthorized = function () use ($app, $auth, $acl, $role, $handler) {
             $resource = $app->router->getCurrentRoute()->getPattern();
             $privilege = $app->request->getMethod();
             $hasIdentity = $auth->hasIdentity();
             $isAllowed = $acl->isAllowed($role, $resource, $privilege);
 
             if(!$isAllowed) {
-              $unauthorized = array("code" => 403, "error" => "Unauthorized access");
-              $app->halt(403, json_encode($unauthorized));
+                $handler->fail();
+            } else {
+                $handler->pass();
             }
         };
 

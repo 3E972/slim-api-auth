@@ -34,6 +34,11 @@ class Bootstrap
     private $adapter;
 
     /**
+     * @var Auth handler
+     */
+    private $handler;
+
+    /**
      * @var StorageInterface AuthenticationService storage
      */
     private $storage;
@@ -55,11 +60,12 @@ class Bootstrap
      * @param AbstractAdapter $adapter
      * @param Acl             $acl
      */
-    public function __construct(Slim $app, AbstractAdapter $adapter, Acl $acl)
+    public function __construct(Slim $app, AbstractAdapter $adapter, Acl $acl, IAuthHandler $handler)
     {
         $this->app = $app;
         $this->adapter = $adapter;
         $this->acl = $acl;
+        $this->handler = $handler;
     }
 
     /**
@@ -73,6 +79,7 @@ class Bootstrap
     {
         $storage = $this->getStorage();
         $adapter = $this->getAdapter();
+        $handler = $this->getHandler();
 
         $this->app->auth = function () use ($storage, $adapter) {
             return new AuthenticationService($storage, $adapter);
@@ -129,6 +136,16 @@ class Bootstrap
     }
 
     /**
+     * Gets auth handler
+     *
+     * @return IAuthHandler Auth Handler
+     */
+    public function getHandler()
+    {
+        return $this->handler;
+    }
+
+    /**
      * Get authMiddleware
      *
      * @return AuthorizationMiddleware Authorization middleware
@@ -138,7 +155,8 @@ class Bootstrap
         if ($this->authMiddleware === null) {
             $this->authMiddleware = new AuthorizationMiddleware(
                 $this->app->auth,
-                $this->getAcl()
+                $this->getAcl(),
+                $this->getHandler()
             );
         }
 
